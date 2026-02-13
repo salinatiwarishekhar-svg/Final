@@ -101,49 +101,61 @@
 </div>
 
 <div id="page10" class="page">
-    <h1>CONGRATULATIONS BATMAN! ❤️</h1>
-    <h2>Will you be my Valentine for 2026?</h2>
-    <div style="position: relative; height: 100px; width: 100%;">
-        <button id="yesBtn" class="btn-main" onclick="celebrate()">YES</button>
-        <button id="noBtn" class="btn-main" onmouseover="moveNo()" onclick="moveNo()">NO</button>
+    <h1 style="font-size: 3.5rem; color: #ff4d6d; text-shadow: 2px 2px 5px rgba(0,0,0,0.1);">Will you be my Valentine? ❤️</h1>
+    <div style="position: relative; height: 150px; width: 100%; margin-top: 20px;">
+        <button id="yesBtn" class="btn-main" style="font-size: 25px; padding: 20px 50px;" onclick="celebrate()">YES! 😍</button>
+        <button id="noBtn" class="btn-main" style="background: #999;" onmouseover="moveNo()">NO</button>
     </div>
 </div>
 
 <script>
-    function goTo(num, progress) {
-        document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-        document.getElementById('page' + num).classList.add('active');
-        document.getElementById('progress-bar').style.width = progress + '%';
-        if(num === 8) {
-            setTimeout(() => { document.getElementById('load-fill').style.width = '100%'; }, 100);
-            setTimeout(() => { goTo(9, 90); }, 3500);
-        }
-    }
-
-    let scanT;
-    function startScan() { 
-        document.getElementById('scan-status').innerText = "Scanning...";
-        scanT = setTimeout(() => { goTo(5, 50); }, 2000); 
-    }
-    function stopScan() { clearTimeout(scanT); document.getElementById('scan-status').innerText = "Failed. Hold longer!"; }
-
-    function checkL5() { if(document.getElementById('quiz1').value.length > 2) goTo(6, 60); }
-    
-    function checkL7() {
-        if(document.getElementById('quiz2').value.toLowerCase().includes("pretty little baby")) goTo(8, 80);
-        else alert("Wrong password, Vengeance.");
-    }
-
-    function moveNo() {
-        const btn = document.getElementById('noBtn');
-        btn.style.left = Math.random() * (window.innerWidth - 100) + 'px';
-        btn.style.top = Math.random() * (window.innerHeight - 100) + 'px';
-    }
-
+    // Updated Celebration Logic
     function celebrate() {
-        confetti({ particleCount: 150, spread: 70, origin: { y: 0.6 } });
-        document.querySelector('#page10 h2').innerText = "YAY! I KNEW IT! 🥰 See you in 2026!";
+        // 1. Trigger massive confetti
+        confetti({
+            particleCount: 200,
+            spread: 100,
+            origin: { y: 0.6 },
+            colors: ['#ff4d6d', '#ff0000', '#ffffff']
+        });
+
+        // 2. Change the text to your cheeky request
+        const page10 = document.getElementById('page10');
+        page10.innerHTML = `
+            <h1 style="font-size: 3rem; color: #ff4d6d; animation: pulse 1s infinite;">YAY! 🥰</h1>
+            <div style="background: white; padding: 30px; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); margin: 20px;">
+                <p style="color: #333; font-size: 1.8rem; font-weight: bold;">Hi My Valentine,</p>
+                <p style="color: #ff4d6d; font-size: 1.5rem;">Could you please put me on your to-do list for today?</p>
+                <p style="color: #333; font-size: 1.2rem; font-style: italic;">It's pretty urgent... hehe 😉</p>
+            </div>
+            <div id="heart-container"></div>
+        `;
+
+        // 3. Start flying hearts
+        setInterval(createHeart, 300);
+    }
+
+    function createHeart() {
+        const heart = document.createElement('div');
+        heart.innerHTML = '❤️';
+        heart.style.position = 'fixed';
+        heart.style.left = Math.random() * 100 + 'vw';
+        heart.style.bottom = '0';
+        heart.style.fontSize = (Math.random() * 20 + 20) + 'px';
+        heart.style.animation = 'floatUp 3s linear forwards';
+        heart.style.zIndex = '1000';
+        document.body.appendChild(heart);
+        setTimeout(() => heart.remove(), 3000);
     }
 </script>
-</body>
-</html>
+
+<style>
+    @keyframes floatUp {
+        to { transform: translateY(-100vh) rotate(360deg); opacity: 0; }
+    }
+    @keyframes pulse {
+        0% { transform: scale(1); }
+        50% { transform: scale(1.1); }
+        100% { transform: scale(1); }
+    }
+</style>
