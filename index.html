@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RESTRICTED: PROJECT VALENTINE</title>
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
+    <style>
+        body, html { margin: 0; padding: 0; height: 100%; font-family: 'Segoe UI', sans-serif; background: #000; color: white; overflow: hidden; }
+        .page { display: none; height: 100vh; width: 100vw; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 20px; box-sizing: border-box; }
+        .active { display: flex; }
+        
+        /* Progress Bar */
+        #progress-container { position: fixed; top: 0; width: 100%; height: 8px; background: #222; z-index: 100; }
+        #progress-bar { height: 100%; width: 10%; background: #ff4d6d; transition: 0.5s; }
+
+        /* Level Themes */
+        #page1 { background: #d32f2f; }
+        #page2 { background: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)), url('https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExNnh6M2Y4eHgzZnh6M2Z4eHgzZnh6M2Z4eHgzZnh6M2Z4eHgzZnh6JmVwPXYxX2ludGVybmFsX2dpZl9ieV9pZCZjdD1n/l396BoOTIFem9xqQU/giphy.gif'); background-size: cover; }
+        #page3 { background: #1a0000; border: 10px solid #ff0000; }
+        #page4 { background: #2d0036; }
+        #page5 { background: #001d3d; }
+        #page6 { background: #ffccd5; color: #ff4d6d; }
+        #page7 { background: #4a0000; }
+        #page8 { background: #000; }
+        #page9 { background: #641212; }
+        #page10 { background: #fff0f3; color: #ff4d6d; }
+
+        button { margin-top: 20px; padding: 15px 30px; font-size: 18px; cursor: pointer; border: none; border-radius: 50px; font-weight: bold; transition: 0.3s; }
+        .btn-main { background: #ff4d6d; color: white; box-shadow: 0 4px 15px rgba(0,0,0,0.3); }
+        input { padding: 12px; border-radius: 10px; border: none; width: 250px; margin-top: 10px; text-align: center; }
+        
+        /* Level 4 Scanner */
+        .scanner { width: 100px; height: 100px; border: 3px solid #00ff00; border-radius: 50%; margin: 20px; cursor: pointer; box-shadow: 0 0 20px #00ff00; display: flex; align-items: center; justify-content: center; }
+
+        /* No Button Logic */
+        #noBtn { position: absolute; }
+    </style>
+</head>
+<body>
+
+<div id="progress-container"><div id="progress-bar"></div></div>
+
+<div id="page1" class="page active">
+    <h1>⚠️ 18+ RESTRICTED</h1>
+    <button class="btn-main" onclick="goTo(2, 20)">VERIFY IDENTITY</button>
+</div>
+
+<div id="page2" class="page">
+    <h1>SUBJECT: AJIT SHEKHAR</h1>
+    <p>Aka: Batman | Vengeance</p>
+    <button class="btn-main" onclick="goTo(3, 30)">THAT'S ME</button>
+</div>
+
+<div id="page3" class="page">
+    <h1>RISK LEVEL: SPICY 5X 🌶️</h1>
+    <p>Prepare for internal system heat.</p>
+    <button class="btn-main" onclick="goTo(4, 40)">PROCEED</button>
+</div>
+
+<div id="page4" class="page">
+    <h2>BIOMETRIC SCAN</h2>
+    <div class="scanner" onmousedown="startScan()" onmouseup="stopScan()" ontouchstart="startScan()" ontouchend="stopScan()">HOLD</div>
+    <p id="scan-status">Place thumb to verify Bat-Pulse</p>
+</div>
+
+<div id="page5" class="page">
+    <h2>LOYALTY TEST</h2>
+    <p>Who is the hottest girl in the universe?</p>
+    <input type="text" id="quiz1" placeholder="Type name here...">
+    <button class="btn-main" onclick="checkL5()">SUBMIT</button>
+</div>
+
+<div id="page6" class="page">
+    <h2>GEAR CHECK</h2>
+    <p>What is Batman's ultimate weakness?</p>
+    <button class="btn-main" onclick="alert('Wrong! Too heavy.')">The Batmobile</button>
+    <button class="btn-main" onclick="goTo(7, 70)">My Cheeks 🍑</button>
+    <button class="btn-main" onclick="alert('Wrong! Try again.')">The Batarang</button>
+</div>
+
+<div id="page7" class="page">
+    <h2>MAIN FIREWALL</h2>
+    <p>HINT: Who am I?</p>
+    <input type="text" id="quiz2" placeholder="The secret phrase...">
+    <button class="btn-main" onclick="checkL7()">BYPASS</button>
+</div>
+
+<div id="page8" class="page">
+    <h2>DECRYPTING...</h2>
+    <div id="loader" style="width: 80%; background: #333; height: 20px; border-radius: 10px;">
+        <div id="load-fill" style="width: 0%; height: 100%; background: gold; border-radius: 10px; transition: 3s;"></div>
+    </div>
+    <p id="load-msg">Analyzing future kisses...</p>
+</div>
+
+<div id="page9" class="page">
+    <h1>FINAL WARNING</h1>
+    <p>Clicking proceed locks you into a lifetime of obsession.</p>
+    <button class="btn-main" onclick="goTo(10, 100)">I ACCEPT MY FATE</button>
+</div>
+
+<div id="page10" class="page">
+    <h1>CONGRATULATIONS BATMAN! ❤️</h1>
+    <h2>Will you be my Valentine for 2026?</h2>
+    <div style="position: relative; height: 100px; width: 100%;">
+        <button id="yesBtn" class="btn-main" onclick="celebrate()">YES</button>
+        <button id="noBtn" class="btn-main" onmouseover="moveNo()" onclick="moveNo()">NO</button>
+    </div>
+</div>
+
+<script>
+    function goTo(num, progress) {
+        document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+        document.getElementById('page' + num).classList.add('active');
+        document.getElementById('progress-bar').style.width = progress + '%';
+        if(num === 8) {
+            setTimeout(() => { document.getElementById('load-fill').style.width = '100%'; }, 100);
+            setTimeout(() => { goTo(9, 90); }, 3500);
+        }
+    }
+
+    let scanT;
+    function startScan() { 
+        document.getElementById('scan-status').innerText = "Scanning...";
+        scanT = setTimeout(() => { goTo(5, 50); }, 2000); 
+    }
+    function stopScan() { clearTimeout(scanT); document.getElementById('scan-status').innerText = "Failed. Hold longer!"; }
+
+    function checkL5() { if(document.getElementById('quiz1').value.length > 2) goTo(6, 60); }
+    
+    function checkL7() {
+        if(document.getElementById('quiz2').value.toLowerCase().includes("pretty little baby")) goTo(8, 80);
+        else alert("Wrong password, Vengeance.");
+    }
+
+    function moveNo() {
+        const btn = document.getElementById('noBtn');
+        btn.style.left = Math.random() * (window.innerWidth - 100) + 'px';
+        btn.style.top = Math.random() * (window.innerHeight - 100) + 'px';
+    }
+
+    function celebrate() {
+        confetti({ particleCount: 150, spread: 70, origin: { y: 0.6 } });
+        document.querySelector('#page10 h2').innerText = "YAY! I KNEW IT! 🥰 See you in 2026!";
+    }
+</script>
+</body>
+</html>
