@@ -9,12 +9,10 @@
         body, html { margin: 0; padding: 0; height: 100%; font-family: 'Segoe UI', sans-serif; background: #000; color: white; overflow: hidden; }
         .page { display: none; height: 100vh; width: 100vw; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 20px; box-sizing: border-box; }
         .active { display: flex; }
-        
-        /* Progress Bar */
         #progress-container { position: fixed; top: 0; width: 100%; height: 8px; background: #222; z-index: 100; }
         #progress-bar { height: 100%; width: 10%; background: #ff4d6d; transition: 0.5s; }
 
-        /* Level Themes */
+        /* Themes */
         #page1 { background: #d32f2f; }
         #page2 { background: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)), url('https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExNnh6M2Y4eHgzZnh6M2Z4eHgzZnh6M2Z4eHgzZnh6M2Z4eHgzZnh6JmVwPXYxX2ludGVybmFsX2dpZl9ieV9pZCZjdD1n/l396BoOTIFem9xqQU/giphy.gif'); background-size: cover; }
         #page3 { background: #1a0000; border: 10px solid #ff0000; }
@@ -26,15 +24,13 @@
         #page9 { background: #641212; }
         #page10 { background: #fff0f3; color: #ff4d6d; }
 
-        button { margin-top: 20px; padding: 15px 30px; font-size: 18px; cursor: pointer; border: none; border-radius: 50px; font-weight: bold; transition: 0.3s; }
+        button { margin-top: 20px; padding: 15px 30px; font-size: 18px; cursor: pointer; border: none; border-radius: 50px; font-weight: bold; transition: 0.3s; z-index: 10; }
         .btn-main { background: #ff4d6d; color: white; box-shadow: 0 4px 15px rgba(0,0,0,0.3); }
-        input { padding: 12px; border-radius: 10px; border: none; width: 250px; margin-top: 10px; text-align: center; }
-        
-        /* Level 4 Scanner */
+        input { padding: 12px; border-radius: 10px; border: none; width: 250px; margin-top: 10px; text-align: center; color: #000; }
         .scanner { width: 100px; height: 100px; border: 3px solid #00ff00; border-radius: 50%; margin: 20px; cursor: pointer; box-shadow: 0 0 20px #00ff00; display: flex; align-items: center; justify-content: center; }
-
-        /* No Button Logic */
-        #noBtn { position: absolute; }
+        
+        @keyframes floatUp { to { transform: translateY(-100vh) rotate(360deg); opacity: 0; } }
+        @keyframes pulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.1); } }
     </style>
 </head>
 <body>
@@ -101,61 +97,64 @@
 </div>
 
 <div id="page10" class="page">
-    <h1 style="font-size: 3.5rem; color: #ff4d6d; text-shadow: 2px 2px 5px rgba(0,0,0,0.1);">Will you be my Valentine? ❤️</h1>
-    <div style="position: relative; height: 150px; width: 100%; margin-top: 20px;">
-        <button id="yesBtn" class="btn-main" style="font-size: 25px; padding: 20px 50px;" onclick="celebrate()">YES! 😍</button>
-        <button id="noBtn" class="btn-main" style="background: #999;" onmouseover="moveNo()">NO</button>
+    <h1 style="font-size: 3rem;">Will you be my Valentine? ❤️</h1>
+    <div style="position: relative; height: 150px; width: 100%;">
+        <button id="yesBtn" class="btn-main" onclick="celebrate()">YES! 😍</button>
+        <button id="noBtn" class="btn-main" style="background: #999; position: absolute;" onmouseover="moveNo()">NO</button>
     </div>
 </div>
 
 <script>
-    // Updated Celebration Logic
-    function celebrate() {
-        // 1. Trigger massive confetti
-        confetti({
-            particleCount: 200,
-            spread: 100,
-            origin: { y: 0.6 },
-            colors: ['#ff4d6d', '#ff0000', '#ffffff']
-        });
-
-        // 2. Change the text to your cheeky request
-        const page10 = document.getElementById('page10');
-        page10.innerHTML = `
-            <h1 style="font-size: 3rem; color: #ff4d6d; animation: pulse 1s infinite;">YAY! 🥰</h1>
-            <div style="background: white; padding: 30px; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); margin: 20px;">
-                <p style="color: #333; font-size: 1.8rem; font-weight: bold;">Hi My Valentine,</p>
-                <p style="color: #ff4d6d; font-size: 1.5rem;">Could you please put me on your to-do list for today?</p>
-                <p style="color: #333; font-size: 1.2rem; font-style: italic;">It's pretty urgent... hehe 😉</p>
-            </div>
-            <div id="heart-container"></div>
-        `;
-
-        // 3. Start flying hearts
-        setInterval(createHeart, 300);
+    function goTo(num, progress) {
+        document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+        document.getElementById('page' + num).classList.add('active');
+        document.getElementById('progress-bar').style.width = progress + '%';
+        if(num === 8) {
+            setTimeout(() => { document.getElementById('load-fill').style.width = '100%'; }, 100);
+            setTimeout(() => { goTo(9, 90); }, 3500);
+        }
     }
 
-    function createHeart() {
-        const heart = document.createElement('div');
-        heart.innerHTML = '❤️';
-        heart.style.position = 'fixed';
-        heart.style.left = Math.random() * 100 + 'vw';
-        heart.style.bottom = '0';
-        heart.style.fontSize = (Math.random() * 20 + 20) + 'px';
-        heart.style.animation = 'floatUp 3s linear forwards';
-        heart.style.zIndex = '1000';
-        document.body.appendChild(heart);
-        setTimeout(() => heart.remove(), 3000);
+    let scanT;
+    function startScan() { 
+        document.getElementById('scan-status').innerText = "Scanning...";
+        scanT = setTimeout(() => { goTo(5, 50); }, 2000); 
+    }
+    function stopScan() { clearTimeout(scanT); document.getElementById('scan-status').innerText = "Failed. Hold longer!"; }
+
+    function checkL5() { if(document.getElementById('quiz1').value.length > 2) goTo(6, 60); }
+    
+    function checkL7() {
+        const val = document.getElementById('quiz2').value.toLowerCase();
+        if(val.includes("pretty little baby")) goTo(8, 80);
+        else alert("Wrong password, Vengeance.");
+    }
+
+    function moveNo() {
+        const btn = document.getElementById('noBtn');
+        btn.style.left = Math.random() * (window.innerWidth - 100) + 'px';
+        btn.style.top = Math.random() * (window.innerHeight - 100) + 'px';
+    }
+
+    function celebrate() {
+        confetti({ particleCount: 200, spread: 100, origin: { y: 0.6 } });
+        const p10 = document.getElementById('page10');
+        p10.innerHTML = `
+            <h1 style="font-size: 3rem; animation: pulse 1s infinite;">YAY! 🥰</h1>
+            <div style="background: white; padding: 25px; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); margin: 10px;">
+                <p style="color: #333; font-size: 1.5rem; font-weight: bold;">Hi My Valentine,</p>
+                <p style="color: #ff4d6d; font-size: 1.3rem;">Could you please put me on your to-do list for today?</p>
+                <p style="color: #333; font-size: 1rem; font-style: italic;">It's pretty urgent... hehe 😉</p>
+            </div>
+        `;
+        setInterval(() => {
+            const heart = document.createElement('div');
+            heart.innerHTML = '❤️';
+            heart.style.cssText = `position:fixed; left:${Math.random()*100}vw; bottom:0; font-size:${Math.random()*20+20}px; animation:floatUp 3s linear forwards;`;
+            document.body.appendChild(heart);
+            setTimeout(() => heart.remove(), 3000);
+        }, 300);
     }
 </script>
-
-<style>
-    @keyframes floatUp {
-        to { transform: translateY(-100vh) rotate(360deg); opacity: 0; }
-    }
-    @keyframes pulse {
-        0% { transform: scale(1); }
-        50% { transform: scale(1.1); }
-        100% { transform: scale(1); }
-    }
-</style>
+</body>
+</html>
